@@ -6,6 +6,11 @@
       html {
         font-family: sans-serif;
       }
+
+      #game-status {
+        margin-bottom: 10px;
+      }
+
       .board {
         width: 160px;
         background: black;
@@ -14,6 +19,7 @@
         grid-template-rows: repeat(3, 50px);
         gap: 5px;
       }
+
       .cell {
         font-weight: bold;
         background: white;
@@ -31,8 +37,38 @@
       from browser import document, html, bind
       import tictactoe
 
+
+      def game_over(state):
+        score = tictactoe.utility(state)
+
+        if score == tictactoe.RESULT_X_WINS:
+          document["game-status"].text = "GAME OVER: Player x wins"
+        elif score == tictactoe.RESULT_O_WINS:
+          document["game-status"].text = "GAME OVER: Player o wins"
+        else:
+          document["game-status"].text = "GAME OVER: It's a draw"
+
+
+      def player_o(state):
+        try:
+          print('player o')
+          _, action = tictactoe.min_value(state)
+
+          document["game"].text = ""
+          next_state = tictactoe.result(state, action)
+          load_state(next_state)
+
+          if tictactoe.terminal(next_state):
+            game_over(next_state)
+            return
+
+          document["game-status"].text = "x is playing..."
+        except:
+          pass
+
+
       def load_state(state):
-        document <= html.DIV([
+        document["game"] <= html.DIV([
           html.DIV(
             value if value != "#" else "",
             id=f"cell{x}{y}",
@@ -48,18 +84,20 @@
 
           try:
             new_state = tictactoe.result(state, (x, y))
-            document.text = ""
+            document["game"].text = ""
             load_state(new_state)
 
-            _, action = tictactoe.min_value(new_state)
+            if tictactoe.terminal(new_state):
+              game_over(new_state)
+              return
 
-            print(action)
-
-            document.text = ""
-            next_state = tictactoe.result(new_state, action)
-            load_state(next_state)
+            document["game-status"].text = "o is playing..."
+            player_o(new_state)
           except:
             pass
+
+
+      document <= html.DIV("x is playing...", id="game-status") + html.DIV(id="game")
 
       initial_state = tictactoe.get_state()
       load_state(initial_state)
