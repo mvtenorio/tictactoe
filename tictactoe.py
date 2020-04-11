@@ -1,5 +1,5 @@
 """Tic-tac-toe
-Edit the game.txt file with your move and run this file in your terminal: python main.py
+Edit game.txt with your move and run this file in your terminal: python tictactoe.py
 """
 
 import math
@@ -27,7 +27,7 @@ def get_state():
     state = []
     with open("game.txt", "r") as board:
         for row in board:
-            state.append([cell for cell in row[:-1]])
+            state.append([cell for cell in row.strip()])
 
     return state
 
@@ -107,6 +107,7 @@ def utility(s):
 
 
 def min_value(s):
+    "Find the action that leads to the minimum possible score"
     action_taken = None
 
     if terminal(s):
@@ -125,6 +126,7 @@ def min_value(s):
 
 
 def max_value(s):
+    "Find the action that leads to the maximum possible score"
     action_taken = None
 
     if terminal(s):
