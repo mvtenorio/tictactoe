@@ -1,6 +1,4 @@
 .vscode
 *.pyc
-brython/*.js
-brython/*.html
-brython/*.txt
+brython
 venv
