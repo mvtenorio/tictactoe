@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      html {
+        font-family: sans-serif;
+      }
+      .board {
+        width: 160px;
+        background: black;
+        display: grid;
+        grid-template-columns: repeat(3, 50px);
+        grid-template-rows: repeat(3, 50px);
+        gap: 5px;
+      }
+      .cell {
+        font-weight: bold;
+        background: white;
+        text-align: center;
+        line-height: 50px;
+        cursor: pointer;
+      }
+    </style>
+    <script type="text/javascript" src="brython/brython.js"></script>
+    <script type="text/javascript" src="brython/brython_stdlib.js"></script>
+  </head>
+
+  <body onload="brython()">
+    <script type="text/python">
+      from browser import document, html, bind
+      import tictactoe
+
+      def load_state(state):
+        document <= html.DIV([
+          html.DIV(
+            value if value != "#" else "",
+            id=f"cell{x}{y}",
+            Class="cell",
+          ) for y, row in enumerate(state) for x, value in enumerate(row)
+        ], Class="board")
+
+        @bind("div.cell", "click")
+        def make_move(event):
+          _id = event.currentTarget.id
+          x = int(_id[-2])
+          y = int(_id[-1])
+
+          try:
+            new_state = tictactoe.result(state, (x, y))
+            document.text = ""
+            load_state(new_state)
+
+            _, action = tictactoe.min_value(new_state)
+
+            print(action)
+
+            document.text = ""
+            next_state = tictactoe.result(new_state, action)
+            load_state(next_state)
+          except:
+            pass
+
+      initial_state = tictactoe.get_state()
+      load_state(initial_state)
+    </script>
+  </body>
+</html>
