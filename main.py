@@ -65,7 +65,6 @@ class Application(tk.Frame):
 
         if tictactoe.terminal(self.state):
             self.game_over()
-            return
 
     def game_over(self):
         score = tictactoe.utility(self.state)
