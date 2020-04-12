@@ -118,6 +118,9 @@ def min_value(s):
     for action in actions(s):
         _max_value, _ = max_value(result(s, action))
 
+        if _max_value == RESULT_O_WINS:
+            return _max_value, action
+
         if _max_value < value:
             value = _max_value
             action_taken = action
@@ -136,6 +139,9 @@ def max_value(s):
 
     for action in actions(s):
         _min_value, _ = min_value(result(s, action))
+
+        if _min_value == RESULT_X_WINS:
+            return _min_value, action
 
         if _min_value > value:
             value = _min_value
